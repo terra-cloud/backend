@@ -21,8 +21,6 @@ class AuthController extends Controller
     public function register(AdminRegisterRequest $request)
     {
         try {
-            
-
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -34,7 +32,7 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $user,
                 'token' => $token,
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Registration failed: ' . $e->getMessage()], 500);
         }
@@ -82,7 +80,12 @@ class AuthController extends Controller
 
     public function user()
     {
-        $user = User::find(auth()->id);
+        $user = auth()->user();
         return response()->json($user);
+    }
+
+    public function checkUser()
+    {
+        return response()->json(['result' => Auth::check()], 200);
     }
 }

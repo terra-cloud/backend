@@ -10,5 +10,6 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
         Route::get('/user', 'user')->name('auth.user');
+        Route::get('/check-user', 'checkUser')->name('auth.checkUser');
     });
 });
