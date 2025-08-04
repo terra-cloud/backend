@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminRegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,20 +18,15 @@ class AuthController extends Controller
 
     }
 
-    public function register(Request $request)
+    public function register(AdminRegisterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
         try {
             
 
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'password' => bcrypt($request->password)
             ]);
 
             $token = $user->createToken('auth-token')->accessToken;
@@ -84,8 +80,9 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully']);
     }
 
-    public function user(Request $request)
+    public function user()
     {
-        return response()->json($request->user());
+        $user = User::find(auth()->id);
+        return response()->json($user);
     }
 }
