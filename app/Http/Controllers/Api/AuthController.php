@@ -53,6 +53,12 @@ class AuthController extends Controller
                 ]);
             }
 
+            if($user->status != 1){
+                throw ValidationException::withMessages([
+                    'validation' => ['Account needs approval.'],
+                ]);
+            }
+
             // $firebaseUser = $this->firebase->getUserByEmail($request->email);
             // if (!$firebaseUser) {
             //     throw ValidationException::withMessages([
