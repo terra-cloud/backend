@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Google\Cloud\Core\Exception\NotFoundException;
 
 class AuthController extends Controller
 {
@@ -15,6 +16,30 @@ class AuthController extends Controller
 
     public function __construct()
     {
+
+    }
+
+    public function removeAccount(Request $request){
+        $request->validate([
+            'reference' => 'required|string',
+        ]);
+
+        try {
+            $firestoreDB = app('firebase.firestore')->database();
+            $firestoreDB->collection('users')->document($request->reference)->delete();
+            
+            return response()->json([
+                'message' => 'Document deleted successfully',
+            ], 200);
+        } catch (NotFoundException $e) {
+            return response()->json([
+                'error' => 'Document not found',
+            ], 404);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => 'Failed to delete document: ' . $e->getMessage(),
+            ], 500);
+        }
 
     }
 
