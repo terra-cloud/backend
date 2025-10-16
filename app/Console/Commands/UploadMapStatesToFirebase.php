@@ -24,7 +24,7 @@ class UploadMapStatesToFirebase extends Command
      */
     public function handle()
     {
-        $this->migrateBarangays();
+        // $this->migrateBarangays();
         // $this->migrateStates();
         // $this->migrateCities();
     }
